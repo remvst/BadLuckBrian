@@ -10,6 +10,29 @@ var requestAnimFrame = window.requestAnimFrame = (function(){
             };
 })();
 
+// Vibration api
+navigator.vibrate = (function(){
+    return navigator.vibrate 
+        || navigator.mozVibrate
+        || navigator.webkitVibrate
+        || navigator.oVibrate
+        || navigator.msVibrate
+        || new Function();
+})();
+
+// Creating a fake console if needed
+// It could be better to use a DOM-based console in some cases.
+var console = (function(){
+    return window.console
+            || { 
+                log : new Function(),
+                debug : new Function(),
+                warn : new Function(),
+                error : new Function(),
+                clear : new Function()
+             };
+})();
+
 var cycleManager = {
     init : function(cycle,fpsMin){
         this.pause = false;
@@ -557,6 +580,9 @@ var game = {
 		setTimeout(function(){
 			game.showMessage('Protect the present from the rain!');
 		},9000);
+		setTimeout(function(){
+			game.showMessage('Use the umbrellas!');
+		},12000);
 		
 		if(this.mobile){
 			DOM.notify('Touch left or right to move Brian',3000,'viewport');
@@ -760,7 +786,7 @@ var game = {
             if(this.highScore > 0 && this.state == 'menu'){
                 fillText('Best: ' + ~~this.highScore + 's',10,10);
             }
-            fillText(cycleManager.fps,100,100);
+            fillText(cycleManager.fps,P.width - 20,10);
 		}
 	},
 	showMessage : function(msg){
@@ -789,6 +815,7 @@ var game = {
 			player.hitByThunder();
 			this.showMessage('Ouch! Brian was hit by thunder!');
             this.shakeTime = 1;
+            navigator.vibrate(1000);
 		}
 	},
 	addCloud : function(){
@@ -897,6 +924,8 @@ var player = {
                 if(!this.isProtected){
                     this.presentHealth -= elapsed * P.presentHealthLossPerSecond;
                     
+                    navigator.vibrate(100);
+                    
                     if(this.presentHealth <= 0){
                         game.end();
                     }
@@ -978,6 +1007,8 @@ var player = {
 			if(this.presentHealth <= 0){
 				translate(3,26);
 			}
+            
+            drawImage(presentImage,5,11);
 			
 			fillStyle = '#ff0000';
 			fillRect(5,14,10,10);
@@ -1418,6 +1449,30 @@ var windImage = (function(){
         fillRect(17,8,1,2);
         fillRect(15,10,2,1);
         fillRect(14,9,1,1);
+    }
+    
+    return cache;
+})();
+
+var presentImage = (function(){
+	var cache = document.createElement('canvas');
+	cache.width = 20;
+	cache.height = 26;
+	
+	var cacheCtx = cache.getContext('2d');
+    
+    with(cacheCtx){
+        fillStyle = '#ff0000';
+        fillRect(0,3,10,10);
+        fillStyle = '#0000ff';
+        fillRect(4,1,2,12);
+        fillRect(0,7,10,2);
+        fillRect(3,0,1,1);
+        fillRect(2,1,1,1);
+        fillRect(3,2,1,1);
+        fillRect(6,0,1,1);
+        fillRect(7,1,1,1);
+        fillRect(6,2,1,1);
     }
     
     return cache;
