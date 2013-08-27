@@ -779,14 +779,14 @@ var game = {
             
             restore();
             
-            font = '10pt Arial';
+            /*font = '10pt Arial';
             fillStyle = '#ffffff';
             textAlign = 'left';
             textBaseline = 'top';
             if(this.highScore > 0 && this.state == 'menu'){
                 fillText('Best: ' + ~~this.highScore + 's',10,10);
             }
-            fillText(cycleManager.fps,P.width - 20,10);
+            fillText(cycleManager.fps,P.width - 20,10);*/
 		}
 	},
 	showMessage : function(msg){
